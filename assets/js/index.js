@@ -58,7 +58,7 @@ var zmitiUtil = {
 
 		//
 
-		this.wxConfig('我是中国文明网网友，让我们一起为九寨沟祈福！', document.title, 'http://h5.zmiti.com/public/SC-earthquake/assets/images/300.jpg');
+		this.wxConfig('我是中国文明网网友，有一份重要提醒要转给你！', document.title, 'http://h5.zmiti.com/public/SC-earthquake/assets/images/300.jpg');
 		this.getOauthurl();
 
 		//this.wxConfig('#一份来自中国文明网网友的善提醒#都在关注九寨沟地震，这件事你是否忽略了', document.title, 'http://h5.zmiti.com/public/SC-earthquake/assets/images/300.jpg', undefined, location.href.split('#')[0]);
@@ -208,11 +208,10 @@ var zmitiUtil = {
 
 					//
 					setTimeout(function() {
-						url = s.changeURLPar(url, 'nickname', s.nickname);
+						//url = s.changeURLPar(url, 'nickname', s.nickname);
 						url = url.split('#')[0];
-						s.wxConfig('我是' + s.nickname + '，让我们一起为九寨沟祈福！', document.title, 'http://h5.zmiti.com/public/SC-earthquake/assets/images/300.jpg', url);
-
-					}, 2000)
+						s.wxConfig('我是' + s.nickname + '有一份重要提醒要转给你!', document.title, 'http://h5.zmiti.com/public/SC-earthquake/assets/images/300.jpg', url);
+					}, 200)
 				} else {
 					if (s.isWeiXin()) {
 
@@ -222,7 +221,7 @@ var zmitiUtil = {
 						var redirect_uri = window.location.href.split('?')[0];
 						var symbol = redirect_uri.indexOf('?') > -1 ? '&' : '?';
 						if (nickname) {
-							redirect_uri = s.changeURLPar(redirect_uri, 'nickname', nickname);
+							//redirect_uri = s.changeURLPar(redirect_uri, 'nickname', nickname);
 						}
 
 
