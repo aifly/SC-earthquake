@@ -65,21 +65,10 @@ var zmitiUtil = {
 	},
 
 
-	changeURLPar: function(destiny, par, par_value) {
-		var pattern = par + '=([^&]*)';
-		var replaceText = par + '=' + par_value;
-		if (destiny.match(pattern)) {
-			var tmp = '/\\' + par + '=[^&]*/';
-			tmp = destiny.replace(eval(tmp), replaceText);
-			return (tmp);
-		} else {
-			if (destiny.match('[\?]')) {
-				return destiny + '&' + replaceText;
-			} else {
-				return destiny + '?' + replaceText;
-			}
-		}
-		return destiny + '\n' + par + '\n' + par_value;
+	changeURLPar: function(url, arg, val) {
+		 var pattern = arg+'=([^&]*)';
+	    var replaceText = arg+'='+val;
+	    return url.match(pattern) ? url.replace(eval('/('+ arg+'=)([^&]*)/gi'), replaceText) : (url.match('[\?]') ? url+'&'+replaceText : url+'?'+replaceText);
 	},
 
 	bindEvent: function() {
@@ -197,34 +186,46 @@ var zmitiUtil = {
 			success(dt) {
 
 				if (dt.getret === 0) {
+
 					s.openid = dt.userinfo.openid;
 					s.nickname = dt.userinfo.nickname;
 					s.headimgurl = dt.userinfo.headimgurl;
 
-					$('.zmiti-name span').html(s.getQueryString('nickname') || s.nickname);
+
+
+					var nickname = s.getQueryString('nickname');
+					
+					if (!nickname) {
+						nickname = '{}';
+					}
+			
+					$('.zmiti-name span').html(JSON.parse(decodeURI(nickname)).key === undefined ? s.nickname:JSON.parse(decodeURI(nickname)).key) ;
 
 					var url = window.location.href;
 
 
 					//
-					setTimeout(function() {
-						//url = s.changeURLPar(url, 'nickname', s.nickname);
-						url = url.split('#')[0];
-						s.wxConfig('我是' + s.nickname + '有一份重要提醒要转给你!', document.title, 'http://h5.zmiti.com/public/SC-earthquake/assets/images/300.jpg', url);
-					}, 200)
-				} else {
-					if (s.isWeiXin()) {
+						url = s.changeURLPar(url, 'nickname',JSON.stringify({
+						key: s.nickname
+					}));
 
 
+
+			setTimeout(function() {
+				url = url.split('#')[0];
+				s.wxConfig('我是' + s.nickname + '，有一份重要提醒要转给你!', document.title, 'http://h5.zmiti.com/public/SC-earthquake/assets/images/300.jpg', url);
+			}, 2000);
+
+		} else {
+			if (s.isWeiXin()) {
 						var nickname = s.getQueryString('nickname');
 
 						var redirect_uri = window.location.href.split('?')[0];
+
 						var symbol = redirect_uri.indexOf('?') > -1 ? '&' : '?';
 						if (nickname) {
-							//redirect_uri = s.changeURLPar(redirect_uri, 'nickname', nickname);
+							redirect_uri = s.changeURLPar(redirect_uri, 'nickname', (nickname));
 						}
-
-
 
 						//url = s.changeURLPar(url, 'nickname', 'zmiti');
 						$.ajax({
